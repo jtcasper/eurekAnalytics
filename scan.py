@@ -2,6 +2,8 @@
 import re
 import os.path
 import sys
+import csv
+import itertools
 
 """
   Finds all function signatures in a file
@@ -25,6 +27,18 @@ def scanFile(filename):
         functions.append(result.group(1))
   return {className.group(1) if className else None : {f for f in functions}}
 
+"""
+  Writes data to a filename.csv
+  @param data dict to be written
+  @return void
+"""
+def writeCsv(data):
+
+  with open(next(iter(data)) + '.csv', 'w') as f:
+    writer = csv.writer(f)
+    writer.writerow(data.keys())
+    writer.writerows(itertools.zip_longest(*data.values()))
+
 if __name__ == '__main__':
   result = scanFile(os.path.expanduser(sys.argv[1])) 
-  print(result)
+  writeCsv(result) 
